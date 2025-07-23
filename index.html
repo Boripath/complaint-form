@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ฟอร์มร้องเรียน</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .message-box {
+      display: none;
+    }
+    .message-box.success {
+      display: block;
+      background-color: #ecfdf5;
+      color: #065f46;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .message-box.error {
+      display: block;
+      background-color: #fef2f2;
+      color: #dc2626;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container bg-white p-8 rounded-xl shadow-lg w-full max-w-xl">
+    <h2 class="text-2xl font-bold text-center mb-6">ฟอร์มรับเรื่องร้องเรียน</h2>
+    <form id="complaintForm" class="space-y-4">
+      <div>
+        <label for="name" class="block font-medium">ชื่อ-นามสกุล</label>
+        <input type="text" id="name" name="ชื่อ-นามสกุล" required class="w-full p-2 border rounded">
+      </div>
+      <div>
+        <label for="email" class="block font-medium">อีเมล</label>
+        <input type="email" id="email" name="อีเมล" class="w-full p-2 border rounded">
+      </div>
+      <div>
+        <label for="complaintType" class="block font-medium">ประเภทการร้องเรียน</label>
+        <select id="complaintType" name="ประเภทการร้องเรียน" required class="w-full p-2 border rounded">
+          <option value="">-- เลือก --</option>
+          <option value="บริการ">บริการ</option>
+          <option value="การเรียนการสอน">การเรียนการสอน</option>
+          <option value="บุคลากร">บุคลากร</option>
+          <option value="สถานที่">สถานที่</option>
+          <option value="อื่นๆ">อื่นๆ</option>
+        </select>
+      </div>
+      <div>
+        <label for="details" class="block font-medium">รายละเอียดการร้องเรียน</label>
+        <textarea id="details" name="รายละเอียด" rows="4" required class="w-full p-2 border rounded"></textarea>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 transition">ส่งเรื่องร้องเรียน</button>
+    </form>
+    <div id="messageBox" class="message-box mt-4"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('complaintForm');
+    const messageBox = document.getElementById('messageBox');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      messageBox.className = 'message-box';
+      messageBox.textContent = 'กำลังส่ง...';
+
+      const data = new FormData(form);
+      const url = 'https://script.google.com/a/macros/pracharath.ac.th/s/AKfycbw40UzBPVTMTY-g7P-bByzSOSljvqpMXw_tjKGK5NIosqnQg9eMKmbOtlJLZtHv_98aQw/exec';
+
+      try {
+        await fetch(url, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: new URLSearchParams(data)
+        });
+
+        messageBox.textContent = '✅ ส่งเรื่องร้องเรียนสำเร็จแล้ว! ขอบคุณสำหรับความคิดเห็นของคุณ';
+        messageBox.classList.add('success');
+        form.reset();
+      } catch (err) {
+        messageBox.textContent = '❌ เกิดข้อผิดพลาดในการส่ง กรุณาลองใหม่';
+        messageBox.classList.add('error');
+      }
+    });
+  </script>
+</body>
+</html>
